@@ -1,47 +1,84 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import styles from "../styles/ToDoList.module.css";
 
-function TodoList() {
+const ToDoList = () => {
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const [taskInput, setTaskInput] = useState("");
 
   const addTask = () => {
-    if (newTask.trim()) {
-      setTasks([...tasks, newTask]);
-      setNewTask("");
+    if (taskInput.trim()) {
+      setTasks([
+        ...tasks,
+        {
+          id: uuidv4(),
+          text: taskInput,
+          completed: false,
+        },
+      ]);
+      setTaskInput("");
     }
   };
 
-  const removeTask = (index) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
+  const toggleTaskCompletion = (id) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
-  const clearTasks = () => {
-    setTasks([]);
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
+
   return (
-    <div>
-      <h2>My To-Do List</h2>
-      <input
-        type="text"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-      />
-      <button onClick={addTask}>Add Task</button>
-      <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>
-            {task}
-            <button onClick={() => removeTask(index)}>Remove</button>
+    <div className={styles.todoContainer}>
+      <div className={styles.inputContainer}>
+        <input
+          type="text"
+          value={taskInput}
+          onChange={(e) => setTaskInput(e.target.value)}
+          placeholder="Add a new task..."
+          className={styles.taskInput}
+          onKeyPress={(e) => e.key === "Enter" && addTask()}
+        />
+        <button onClick={addTask} className={styles.addButton}>
+          Add Task
+        </button>
+      </div>
+
+      <ul className={styles.taskList}>
+        {tasks.map((task) => (
+          <li
+            key={task.id}
+            className={`${styles.taskItem} ${
+              task.completed ? styles.completed : ""
+            }`}
+          >
+            <span
+              onClick={() => toggleTaskCompletion(task.id)}
+              className={styles.taskText}
+            >
+              {task.text}
+            </span>
+            <button
+              onClick={() => deleteTask(task.id)}
+              className={styles.deleteButton}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
-      <button onClick={clearTasks}>Clear All</button>
+
+      {tasks.length > 0 && (
+        <div className={styles.summary}>
+          {tasks.filter((t) => !t.completed).length} tasks remaining
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default TodoList;
-// This component manages a simple to-do list where users can add tasks.
-// It uses React's useState hook to manage the list of tasks and the input for new tasks.
-// The addTask function adds a new task to the list, removeTask removes a specific task,
-// and clearTasks clears all tasks from the list.
+export default ToDoList;

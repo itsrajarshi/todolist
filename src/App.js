@@ -1,14 +1,17 @@
-import "./App.css";
 import React from "react";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import TodoList from "./components/todolist";
+import Header from "./components/Header";
+import ToDoList from "./components/ToDoList";
+import Footer from "./components/Footer";
+import "./styles/global.css";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Welcome to My To-Do List App</h1>
-      <TodoList />
+    <div className="app-container">
+      <Header />
+      <main>
+        <ToDoList />
+      </main>
+      <Footer />
     </div>
   );
 }

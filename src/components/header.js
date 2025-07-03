@@ -1,18 +1,13 @@
 import React from "react";
+import styles from "../styles/Header.module.css";
 
-function Header() {
+const Header = () => {
   return (
-    <header>
-      <nav>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
+    <header className={styles.header}>
+      <h1>React To-Do List</h1>
+      <p>Get things done, one task at a time</p>
     </header>
   );
-}
+};
 
 export default Header;
-// This component renders a header with the title of the application.
